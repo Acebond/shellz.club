@@ -8,7 +8,7 @@ In a recent engagement I had to compromise a hardened desktop running CrowdStrik
 
 Initially I wrote a very basic loader that used a bruteforce decryption algorithm to run a Cobalt Strike beacon using VirtualAlloc and CreateThread.
 
-<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src=" __GHOST_URL__ /content/images/2020/06/2020-06-26_15-03-57.png" class="kg-image" alt loading="lazy"><figcaption>VirtualAlloc/CreateThread loader</figcaption></figure>
+<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="/images/2020/06/2020-06-26_15-03-57.png" class="kg-image" alt loading="lazy"><figcaption>VirtualAlloc/CreateThread loader</figcaption></figure>
 
 The shellcode was stored encrypted within the C# code and decrypted using a multibyte XOR key with the last 3 bytes removed. The while loop continuously increments the decryption key, &nbsp;performs XOR decryption and hashes the decrypted payload until the hash value of the decrypted shellcode matches its original hash value. This methods prevents antivirus or snooping eyes from easily reading the shellcode, and in fact no antivirus product would spend the amount of time required to decrypt the shellcode even if they knew how to run C# code in MSBuild project files.
 
@@ -22,11 +22,11 @@ The **NtQueueApcThread** routine adds a user-mode asynchronous procedure call (A
 
 These methods are far less common, and considered more stealthy. The majority of the loader code was taken from the Sharp-Suite UrbanBishop POC ([https://github.com/FuzzySecurity/Sharp-Suite](https://github.com/FuzzySecurity/Sharp-Suite)) which implemented exactly what I wanted. I updated the POC slightly to support inline shellcode and automatic process selection for the injection.
 
-<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src=" __GHOST_URL__ /content/images/2020/06/2020-06-26_16-06-09.png" class="kg-image" alt loading="lazy"><figcaption>NtMapViewOfSection/NtQueueApcThread loader with debug statements and error checking removed to fit into a screenshot</figcaption></figure>
+<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="/images/2020/06/2020-06-26_16-06-09.png" class="kg-image" alt loading="lazy"><figcaption>NtMapViewOfSection/NtQueueApcThread loader with debug statements and error checking removed to fit into a screenshot</figcaption></figure>
 
 The loader now successfully bypassed the CrowdStrike prevention rules. The use of MSBuild did trigger a detection alert in this particular configuration that was unfortunately unavoidable unless a different initial code execution method was used. The detection alert was not a prevention which meant the shell was allowed to live.
 
-<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src=" __GHOST_URL__ /content/images/2020/06/nasty-loader-1.png" class="kg-image" alt loading="lazy"><figcaption>Successful execution with debug statements</figcaption></figure>
+<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="/images/2020/06/nasty-loader-1.png" class="kg-image" alt loading="lazy"><figcaption>Successful execution with debug statements</figcaption></figure>
 
 The loader does create a suspended thread in the remote process to queue the APC. This can be avoided by selecting an already existing thread, however the thread needs to enter/be in an alertable state for the APC to execute and picking the wrong thread can impact the stability of the remote process. The trade-off for that extra bit of stealthiness did not seem worthwhile but I figured it worth mentioning for anyone writing detections.
 

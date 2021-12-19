@@ -91,7 +91,7 @@ I have chosen to live dangerously and removed rule option 3 (Enable:Audit Mode) 
 
 The new policy allows Chrome, 7-Zip and Sublime Text 3 and blocks all other software from running.
 
-<figure class="kg-card kg-image-card kg-width-wide"><img src=" __GHOST_URL__ /content/images/2020/08/blocked-1.png" class="kg-image" alt loading="lazy" width="1580" height="834" srcset=" __GHOST_URL__ /content/images/size/w600/2020/08/blocked-1.png 600w, __GHOST_URL__ /content/images/size/w1000/2020/08/blocked-1.png 1000w, __GHOST_URL__ /content/images/2020/08/blocked-1.png 1580w" sizes="(min-width: 1200px) 1200px"></figure>
+<figure class="kg-card kg-image-card kg-width-wide"><img src="/images/2020/08/blocked-1.png" class="kg-image" alt loading="lazy" width="1580" height="834" srcset="/images/size/w600/2020/08/blocked-1.png 600w,/images/size/w1000/2020/08/blocked-1.png 1000w,/images/2020/08/blocked-1.png 1580w" sizes="(min-width: 1200px) 1200px"></figure>
 ## Bypassing WDAC?
 
 WDAC is a security boundary that cannot be bypassed without an exploit. &nbsp;The only practical method to bypass WDAC is to find a misconfiguration within the organisation policy. This could be a whitelisted folder, certificate authority, or software component.
