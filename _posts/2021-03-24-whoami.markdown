@@ -1,0 +1,8 @@
+---
+layout: post
+title: whoami
+date: '2021-03-24 11:29:04'
+---
+
+Web/External/Internal penetration tester, red teaming enthusiast and hobbyist CTF player/creator. Primarily focused on AV/EDR evasion, Active Directory attacks and Windows internals.
+
