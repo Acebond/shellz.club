@@ -6,7 +6,7 @@ date: '2021-07-26 05:52:05'
 
 All Active Directory user account password hashes are stored inside the ntds.dit database file on the Domain Controllers. However, if you have ever tried copying the file, you'll probably have received the following error message.
 
-<figure class="kg-card kg-image-card"><img src="/images/2021/07/meme_for_blog.jpg" class="kg-image" alt loading="lazy" width="500" height="764"></figure>
+{% include image.html url="/images/2021/07/meme_for_blog.jpg" %}
 
 Well as it turns out, the LSASS process has already opened the file, and when it called [CreateFileW](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew) to open ntds.dit, it set the dwShareMode parameter to the value 0, which "Prevents other processes from opening a file or device if they request delete, read, or write access". What can we do about this? Well there are 4 different techniques that can be used to bypass the exclusive file handle restrictions. These are:
 
@@ -62,7 +62,8 @@ This can be shortened into a single line command line so:
 
     ntdsutil "ac i ntds" "ifm" "create full c:\windows\temp\snapshot" q q
 
-<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="/images/2021/06/image.png" class="kg-image" alt loading="lazy" width="1242" height="802" srcset="/images/size/w600/2021/06/image.png 600w,/images/size/w1000/2021/06/image.png 1000w,/images/2021/06/image.png 1242w" sizes="(min-width: 1200px) 1200px"><figcaption>ntdsutil one-liner executed in Cobalt Strike</figcaption></figure>
+{% include image.html url="/images/2021/06/image.png" description="ntdsutil one-liner executed in Cobalt Strike" %}
+
 ### vssadmin, DiskShadow and esentutl
 
 These built-in tools can also be used to copy files using the VSS. The location of the ntds.dit database file, which defaults to `C:\Windows\NTDS\ntds.dit`, can in the rare case of a non-default setting, be found by checking the `DSA Database file` value in the registry key `HKLM\SYSTEM\CurrentControlSet\Services\NTDS\Parameters`. Examples of copying the files using vssadmin and esentutl are shown below:
@@ -77,7 +78,9 @@ vssadmin delete shadows /shadow={GUID}</code></pre>
 
 I would suggest compressing (and maybe encrypting) the files before exfiltrating the data to save bandwidth. I use [MiddleOut](https://github.com/FortyNorthSecurity/MiddleOut). The credential material can then be dumped using something like [gosecretsdump](https://github.com/C-Sto/gosecretsdump) (must faster then Impacket secretsdump.py and bonus points because I'm a go fanboy).
 
-<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="/images/2021/07/image-6.png" class="kg-image" alt loading="lazy" width="1768" height="558" srcset="/images/size/w600/2021/07/image-6.png 600w,/images/size/w1000/2021/07/image-6.png 1000w,/images/size/w1600/2021/07/image-6.png 1600w,/images/2021/07/image-6.png 1768w" sizes="(min-width: 1200px) 1200px"><figcaption>Dumping credential material using gosecretsdump</figcaption></figure><figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="/images/2021/07/image-5.png" class="kg-image" alt loading="lazy" width="1439" height="661" srcset="/images/size/w600/2021/07/image-5.png 600w,/images/size/w1000/2021/07/image-5.png 1000w,/images/2021/07/image-5.png 1439w" sizes="(min-width: 1200px) 1200px"><figcaption>Dumping credential material using secretsdump.py</figcaption></figure>
+{% include image.html url="/images/2021/07/image-6.png" description="Dumping credential material using gosecretsdump" %}
+
+{% include image.html url="/images/2021/07/image-5.png" description="Dumping credential material using secretsdump.py" %}
 
 The VSS method is fairly stealthy, can be done remotely using WMI or WinRM, and it's unlikely that the events are being monitored or alerted on.
 
@@ -87,7 +90,7 @@ This is probably the stealthiest local method in terms of detection. The tools [
 
 My personal preference is NTFSCopy as it is compatible with execute-assembly (in-memory execution) within C2 tools such as Cobalt Strike.
 
-<figure class="kg-card kg-image-card kg-width-wide"><img src="/images/2021/07/image-7.png" class="kg-image" alt loading="lazy" width="1533" height="754" srcset="/images/size/w600/2021/07/image-7.png 600w,/images/size/w1000/2021/07/image-7.png 1000w,/images/2021/07/image-7.png 1533w" sizes="(min-width: 1200px) 1200px"></figure>
+{% include image.html url="/images/2021/07/image-7.png" description="NTFSCopy tool usage" %}
 
 Hopefully this helps you dumping those juicy Active Directory credentials.
 
