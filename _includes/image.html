@@ -1,6 +1,4 @@
 <figure class="image">
     <img src="{{ include.url }}" alt="{{ include.description }}">
-    {% if include.description %}
-    <figcaption>{{ include.description }}</figcaption>
-    {% endif %}
-  </figure>
+    {% if include.description %}<figcaption>{{ include.description }}</figcaption>{% endif %}
+</figure>

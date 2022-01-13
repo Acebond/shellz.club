@@ -25,11 +25,15 @@ The Directory Replication Service (DRS) Remote Protocol can be leveraged to remo
 
 Synchronizing data using the DRS Remote Protocol requires replication permissions, which Domain Admins have by default. The technique must be performed within the context of a user that has the highlighted privileges below.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/images/2021/07/image.png" class="kg-image" alt loading="lazy" width="598" height="681"><figcaption>Default Domain Admin permissions</figcaption></figure>
+{% include image.html url="/images/2021/07/image.png" description="Default Domain Admin permissions" %}
 
 The Mimikatz `lsadump::dcsync` command can be used to dump all NTLM hashes, Kerberos keys, or specific information based on GUID.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/images/2021/07/image-1.png" class="kg-image" alt loading="lazy" width="921" height="292" srcset="/images/size/w600/2021/07/image-1.png 600w,/images/2021/07/image-1.png 921w" sizes="(min-width: 720px) 720px"><figcaption>Dump all NTLM hashes</figcaption></figure><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/images/2021/07/image-2.png" class="kg-image" alt loading="lazy" width="1104" height="894" srcset="/images/size/w600/2021/07/image-2.png 600w,/images/size/w1000/2021/07/image-2.png 1000w,/images/2021/07/image-2.png 1104w" sizes="(min-width: 720px) 720px"><figcaption>Dump KRBTGT credential information and Kerberos keys</figcaption></figure><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/images/2021/07/image--1-.png" class="kg-image" alt loading="lazy" width="888" height="499" srcset="/images/size/w600/2021/07/image--1-.png 600w,/images/2021/07/image--1-.png 888w" sizes="(min-width: 720px) 720px"><figcaption>Dump Trust Keys</figcaption></figure>
+{% include image.html url="/images/2021/07/image-1.png" description="Dump all NTLM hashes" %}
+
+{% include image.html url="/images/2021/07/image-2.png" description="Dump KRBTGT credential information and Kerberos keys" %}
+
+{% include image.html url="/images/2021/07/image--1-.png" description="Dump Trust Keys" %}
 
 The same information can also be retrieved using Impacket secretsdump.py or SharpKatz. I personally consider this technique the stealthiest, as no code needs to be executed on the Domain Controller, and I've never had it detected during internal engagements.
 
@@ -39,7 +43,9 @@ Since the LSASS has an open handle to the file, an attacker can manipulate the L
 
 Mimikatz can inject or patch the LSASS process and leverage it's functionality to dump the credential material stored within ntds.dit. The [mimikatz-deep-dive-on-lsadumplsa-patch-and-inject](https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html) blog post explains this really well. TLDR: The `/patch` method should be considered more OPSEC safe. The `/inject` method will create a new thread inside LSASS.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/images/2021/07/image-3.png" class="kg-image" alt loading="lazy" width="700" height="660" srcset="/images/size/w600/2021/07/image-3.png 600w,/images/2021/07/image-3.png 700w"><figcaption>lsadump::lsa /patch (optionally /name:KRBTGT to print for a specific user)</figcaption></figure><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/images/2021/07/image-4.png" class="kg-image" alt loading="lazy" width="752" height="747" srcset="/images/size/w600/2021/07/image-4.png 600w,/images/2021/07/image-4.png 752w" sizes="(min-width: 720px) 720px"><figcaption>lsadump::lsa /inject /name:KRBTGT (omitting the name will print the information for all users)</figcaption></figure>
+{% include image.html url="/images/2021/07/image-3.png" description="lsadump::lsa /patch (optionally /name:KRBTGT to print for a specific user)" %}
+
+{% include image.html url="/images/2021/07/image-4.png" description="lsadump::lsa /inject /name:KRBTGT (omitting the name will print the information for all users)" %}
 
 Other tools such as Meterpreter hashdump use similar techniques to dump the credential material by injecting into LSASS. This approach is the most detectable as any anomalous manipulation of the LSASS process, which is heavily monitored by EDR, should be considered a critical alert.
 

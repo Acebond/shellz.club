@@ -22,7 +22,7 @@ title: shellz.club
 email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
   Addicted to powerlifting, obsessed with security.
-  Penetration Tester and Red Team. 
+  Penetration Tester and Red Team Operator.
   I enjoy security related research and discussion.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://shellz.club" # the base hostname & protocol for your site, e.g. http://example.com
@@ -33,6 +33,10 @@ github_username:  Acebond
 theme: minima
 plugins:
   - jekyll-feed
+  
+# Dev only
+#host: 0.0.0.0
+#port: 80
 
 # Exclude from processing.
 # The following items will not be processed, by default.

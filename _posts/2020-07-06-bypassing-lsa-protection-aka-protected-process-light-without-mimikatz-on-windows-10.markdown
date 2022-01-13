@@ -1,7 +1,6 @@
 ---
 layout: post
-title: Bypassing LSA Protection (aka Protected Process Light) without Mimikatz on
-  Windows 10
+title: Bypassing LSA Protection (aka Protected Process Light) without Mimikatz on Windows 10
 date: '2020-07-06 23:07:04'
 ---
 
@@ -21,17 +20,17 @@ I decided to implement the 2nd method since removing the PPL flags allows the us
 
 The [EnumDeviceDrivers](https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumdevicedrivers?redirectedfrom=MSDN) function can be used to leak the kernel base address. This can be used to locate the PsInitialSystemProcess which points to the EPROCESS structure for the system process. Since the kernel stores processes in a linked list, the ActiveProcessLinks member of the EPROCESS structure can be used to iterate the linked list and find LSASS.
 
-<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="/images/2020/07/code.png" class="kg-image" alt loading="lazy"><figcaption>Figure 1 - Code to find the LSASS EPROCESS structure</figcaption></figure>
+{% include image.html url="/images/2020/07/code.png" description="Figure 1 - Code to find the LSASS EPROCESS structure" %}
 
 If we look at the EPROCESS structure (see Figure 2 below) we can see that the 5 fields we need to patch are all conventionally aligned into a continuous 4bytes. This lets us patch the EPROCESS structure in a single 4 byte write like so:
 
 > WriteMemoryPrimitive(Device, 4, CurrentProcessAddress + SignatureLevelOffset, 0x00);
 
-<figure class="kg-card kg-image-card kg-width-wide kg-card-hascaption"><img src="/images/2020/07/EPROCESS3.png" class="kg-image" alt loading="lazy"><figcaption>Figure 2 - EPROCESS structure offsets on Windows 1909</figcaption></figure>
+{% include image.html url="/images/2020/07/EPROCESS3.png" description="Figure 2 - EPROCESS structure offsets on Windows 1909" %}
 
 Now that the PPL has been removed, all the traditional methods of dumping LSASS will work, such as MimiKatz, the MiniDumpWriteDump API call, etc.
 
-<figure class="kg-card kg-embed-card"><iframe width="480" height="270" src="https://www.youtube.com/embed/w2_KqnhgN94?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></figure>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/w2_KqnhgN94" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 The tool which is written in C/C++ to perform this attack can be found on [GitHub](https://github.com/RedCursorSecurityConsulting/PPLKiller). I’ve only tested on Windows 1903, 1909 and 2004. It should work on all versions of Windows since the feature was introduced but I’ve only got the offsets for those versions implemented.
 
